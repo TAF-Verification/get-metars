@@ -61,10 +61,10 @@ def main(
         ),
     ),
     filename: str = typer.Option(
-        "reports.txt",
+        "metar.txt",
         "--file",
         "-F",
-        help="The filename to write the reports on disk.",
+        help="The filename to write the reports on disk. Default will be changed",
     ),
     one_line: bool = typer.Option(
         False,
@@ -79,14 +79,15 @@ def main(
 ) -> None:
     if report_type == "FT" or report_type == "FC":
         report_filename = "taf"
-    elif report_type == "SA":
-        report_filename = "metar"
+        filename = f"{report_filename}.txt"
+    elif report_type == "ALL":
+        report_type = "report"
+        filename = f"{report_filename}.txt"
     elif report_type == "SP":
         report_filename = "speci"
+        filename = f"{report_filename}.txt"
     else:
         pass
-
-    filename = f"{report_filename}.txt"
 
     if final_date is None:
         final_date = init_date + timedelta(days=30, hours=23, minutes=59)
