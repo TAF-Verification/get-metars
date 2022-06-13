@@ -49,13 +49,16 @@ def main(
         "2006-01-01T00:00:00",
         "--init",
         "-i",
-        help="The initial date to request the reports.",
+        help="The initial UTC date and time to request the reports.",
     ),
     final_date: datetime = typer.Option(
         None,
         "--final",
         "-f",
-        help="The final date to request the reports. Defaults to `init` + 30 days.",
+        help=(
+            "The final UTC date and time to request the reports. "
+            "Defaults to `init` + 30 days, 23 hours and 59 minutes."
+        ),
     ),
     filename: str = typer.Option(
         "reports.txt",
@@ -68,30 +71,46 @@ def main(
         "--one-line",
         "-o",
         is_flag=True,
-        help="Remove white spaces in the reports. If True reports will be written in one line.",
+        help=(
+            "Remove white spaces in the reports. "
+            "If True reports will be written in one line."
+        ),
     ),
 ) -> None:
     if report_type == "FT" or report_type == "FC":
-        filename = "taf.txt"
+        report_filename = "taf"
     elif report_type == "SA":
-        filename = "metar.txt"
-    elif filename == "SP":
-        filename = "speci.txt"
+        report_filename = "metar"
+    elif report_type == "SP":
+        report_filename = "speci"
     else:
         pass
 
-    if final_date is None:
-        final_date = init_date + timedelta(days=30, hours=23)
+    filename = f"{report_filename}.txt"
 
-    reports = asyncio.run(
-        get_reports(icao.upper(), report_type, str(init_date), str(final_date))
-    )
-    if one_line:
-        reports = remove_white_spaces(reports)
+    if final_date is None:
+        final_date = init_date + timedelta(days=30, hours=23, minutes=59)
+    typer.echo(f"Request from {init_date} to {final_date}.")
+
+    reports: List[str] = []
+    try:
+        reports = asyncio.run(
+            get_reports(icao.upper(), report_type, str(init_date), str(final_date))
+        )
+    except Exception as e:
+        typer.echo(f"{e}.".capitalize())
+    else:
+        if one_line:
+            reports = remove_white_spaces(reports)
 
     with open(f"./{filename}", "w") as f:
         for report in reports:
             f.write(report + "\n")
+
+    if len(reports) > 0:
+        typer.echo(f"{len(reports)} {report_filename.upper()} requested succesfully.")
+    if len(reports) == 0:
+        typer.echo(f"No {report_filename.upper()} requested.")
 
 
 if __name__ == "__main__":

@@ -38,8 +38,6 @@ class DateInitPayload:
 
 
 class DateFinalPayload(DateInitPayload):
-    minute: int = 59
-
     @property
     def to_dict(self) -> Dict[str, str]:
         return {
@@ -47,7 +45,7 @@ class DateFinalPayload(DateInitPayload):
             "mesf": f"{self.date.month:02d}",
             "dayf": f"{self.date.day:02d}",
             "horaf": f"{self.date.hour:02d}",
-            "minf": f"{self.minute}",
+            "minf": f"{self.date.minute:02d}",
         }
 
 
