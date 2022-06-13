@@ -77,6 +77,10 @@ def main(
         ),
     ),
 ) -> None:
+    if init_date > datetime.today():
+        typer.echo(f"Initial date and time must be older than current date and time.")
+        return
+
     if report_type == "FT" or report_type == "FC":
         report_filename = "taf"
         filename = f"{report_filename}.txt"
