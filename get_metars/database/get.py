@@ -54,7 +54,7 @@ class DateFinalPayload(DateInitPayload):
 @dataclass
 class Payload:
     icao: str
-    type_: Literal["ALL", "SA", "SP", "FT"]
+    type_: Literal["ALL", "SA", "SP", "FT", "FC"]
     ord_: Literal["REV", "DIR"]
     nil: Literal["SI", "NO"]
     fmt: Literal["html", "txt"]
@@ -102,9 +102,7 @@ async def get_reports(icao: str, type_: str, init: str, final: str) -> None:
     # Validate dates
     validate_dates(init_date.date, final_date.date)
     # Init payload
-    payload_instance = Payload(
-        icao=icao, type_=type_, ord_="DIR", nil="SI", fmt="html"
-    )
+    payload_instance = Payload(icao=icao, type_=type_, ord_="DIR", nil="SI", fmt="html")
     payload = payload_instance.to_dict
     # Update payload with valid dates
     payload.update(init_date.to_dict)

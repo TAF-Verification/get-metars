@@ -24,6 +24,7 @@ class ReportType(str, Enum):
     SA = "SA"
     SP = "SP"
     FT = "FT"
+    FC = "FC"
     ALL = "ALL"
 
 
@@ -38,7 +39,8 @@ def main(
         help="""Type of report to request.
         SA -> METAR,
         SP -> SPECI,
-        FT -> TAF,
+        FT -> TAF (long),
+        FC -> TAF (short),
         ALL -> All types""",
     ),
     init_date: datetime = typer.Option(
@@ -57,7 +59,7 @@ def main(
         help="Remove white spaces of the reports. If True reports will be written in one line.",
     ),
 ) -> None:
-    if report_type == "FT":
+    if report_type == "FT" or report_type == "FC":
         filename = "taf.txt"
     elif report_type == "SA":
         filename = "metar.txt"
