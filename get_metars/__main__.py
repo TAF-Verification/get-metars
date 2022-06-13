@@ -6,12 +6,12 @@ from enum import Enum
 
 import typer
 
-from .database import get_reports
+from .get import get_reports
 
 app = typer.Typer()
 
 
-def remove_spaces(reports: List[str]):
+def remove_white_spaces(reports: List[str]):
     sanitized_reports: List[str] = []
     for report in reports:
         report = re.sub(r"\s{2,}|\n+|\t+", " ", report)
@@ -35,7 +35,9 @@ def main(
         help="The ICAO code of the station to request, e.g. MROC for Int. Airp. Juan Santamaría",
     ),
     report_type: ReportType = typer.Option(
-        default=ReportType.SA,
+        ReportType.SA,
+        "--type",
+        "-t",
         help="""Type of report to request.
         SA -> METAR,
         SP -> SPECI,
@@ -44,19 +46,29 @@ def main(
         ALL -> All types""",
     ),
     init_date: datetime = typer.Option(
-        default="2006-01-01T00:00:00",
+        "2006-01-01T00:00:00",
+        "--init",
+        "-i",
         help="The initial date to request the reports.",
     ),
     final_date: datetime = typer.Option(
-        default=None, help="The final date to request the reports."
+        None,
+        "--final",
+        "-f",
+        help="The final date to request the reports. Defaults to `init` + 30 days.",
     ),
     filename: str = typer.Option(
-        default="reports.txt", help="The filename to write the reports on disk."
+        "reports.txt",
+        "--file",
+        "-F",
+        help="The filename to write the reports on disk.",
     ),
-    remove_white_spaces: bool = typer.Option(
-        default=False,
+    one_line: bool = typer.Option(
+        False,
+        "--one-line",
+        "-o",
         is_flag=True,
-        help="Remove white spaces of the reports. If True reports will be written in one line.",
+        help="Remove white spaces in the reports. If True reports will be written in one line.",
     ),
 ) -> None:
     if report_type == "FT" or report_type == "FC":
@@ -74,8 +86,8 @@ def main(
     reports = asyncio.run(
         get_reports(icao.upper(), report_type, str(init_date), str(final_date))
     )
-    if remove_white_spaces:
-        reports = remove_spaces(reports)
+    if one_line:
+        reports = remove_white_spaces(reports)
 
     with open(f"./{filename}", "w") as f:
         for report in reports:
