@@ -7,6 +7,7 @@ from enum import Enum
 import typer
 
 from .get import get_reports
+from .sanitize import sanitize_metar, sanitize_taf
 
 app = typer.Typer()
 
@@ -76,20 +77,23 @@ def main(
             "If True reports will be written in one line."
         ),
     ),
+    sanitize: bool = typer.Option(
+        False,
+        "--sanitize",
+        "-s",
+        help="Sanitize the report to use in TAF verification program.",
+    ),
 ) -> None:
     if init_date > datetime.today():
         typer.echo(f"Initial date and time must be older than current date and time.")
         return
 
     if report_type == "FT" or report_type == "FC":
-        report_filename = "taf"
-        filename = f"{report_filename}.txt"
+        filename = "taf.txt"
     elif report_type == "ALL":
-        report_type = "report"
-        filename = f"{report_filename}.txt"
+        filename = "report.txt"
     elif report_type == "SP":
-        report_filename = "speci"
-        filename = f"{report_filename}.txt"
+        filename = "speci.txt"
     else:
         pass
 
@@ -110,8 +114,14 @@ def main(
 
     with open(f"./{filename}", "w") as f:
         for report in reports:
+            if sanitize:
+                if report_type in ["SA", "SP"]:
+                    report = sanitize_metar(report, icao)
+                elif report_type in ["FC", "FT"]:
+                    report = sanitize_taf(report, icao)
             f.write(report + "\n")
 
+    report_filename = filename.replace(".txt", "")
     if len(reports) > 0:
         typer.echo(f"{len(reports)} {report_filename.upper()} requested succesfully.")
     if len(reports) == 0:
