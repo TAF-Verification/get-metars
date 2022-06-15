@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Simple command line tool to download METAR's and TAF's for a given station and store them in text files."
 authors = ["diego-garro <diego.garromolina@yahoo.com>"]
 license = "MIT"
-repository = ""
+repository = "https://github.com/diego-garro/tafver-metars"
 
 [tool.poetry.scripts]
 tafver = 'get_metars.__main__:get_metars'
