@@ -79,16 +79,16 @@ def _remove_suplementary_info(metar: str):
 def _remove_rmk_and_trend_indicator(metar: str):
     metar = re.sub(r"\s?RMK.+", "=", metar)
     metar = re.sub(
-        r"\s?(BECMG|BECMG(0|O|\??\s?\?+)|VECMG|BCMG|BECMG/|BECM/|BCMG/|BECOMG|BECGM|BECM\sG).+",
+        r"\s?(BECMG|BECMG(0|O|\??\s?\?+)|VECMG|BCMG|BECMG/|BECM/|BCMG/|BECOMG|BECGM|BECM\sG)(.+)?",
         "=",
         metar,
     )
     metar = re.sub(
-        r"\s?(NOSIG|NOPSIG|NSIG|NPSIG|NOZIG|NOPZIG|NOSOG|MOSIG|NISIG|NOSGI|NOSI\sG|NOSIG0|NSOIG|NOSIIG).+",
+        r"\s?(NOSIG|NOPSIG|NSIG|NPSIG|NOZIG|NOPZIG|NOSOG|MOSIG|NISIG|NOSGI|NOSI\sG|NOSIG0|NSOIG|NOSIIG)(.+)?",
         "=",
         metar,
     )
-    metar = re.sub(r"\s?(TEMPO|TMPO|TEMPOO|TMEPO|TEMOP|TEMO|TEMP\sO).+", "=", metar)
+    metar = re.sub(r"\s?(TEMPO|TMPO|TEMPOO|TMEPO|TEMOP|TEMO|TEMP\sO)(.+)?", "=", metar)
 
     return metar
 
