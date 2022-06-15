@@ -1,12 +1,12 @@
-from typing import Dict, List, Optional
-from typing_extensions import Literal
-from datetime import datetime
-
-from pydantic.dataclasses import dataclass
-from pydantic import validator
-import aiohttp
 import asyncio
+from datetime import datetime
+from typing import Dict, List, Optional
+
+import aiohttp
 from bs4 import BeautifulSoup
+from pydantic import validator
+from pydantic.dataclasses import dataclass
+from typing_extensions import Literal
 
 today = datetime.today()
 
