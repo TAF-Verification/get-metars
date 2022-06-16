@@ -8,7 +8,7 @@ license = "MIT"
 repository = "https://github.com/diego-garro/tafver-metars"
 
 [tool.poetry.scripts]
-tafver = 'get_metars.__main__:get_metars'
+get-metars = 'get_metars.__main__:app'
 
 [tool.poetry.dependencies]
 python = "^3.7"
