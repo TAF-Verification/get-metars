@@ -1,3 +1,7 @@
+# 0.2.2
+
+- Fix Makefile commands to lint and style the code
+
 # 0.2.1
 
 - Fix command name error in pyproject.toml

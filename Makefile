@@ -4,6 +4,7 @@ POETRY_RUN=$(POETRY) run
 SOURCE_FILES=$(shell find . -path "./get_metars/*.py")
 TEST_FILES=$(shell find . -path "./tests/**/*.py")
 SOURCES_FOLDER=get_metars
+TESTS_FOLDER=tests
 
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 
@@ -39,10 +40,10 @@ lint:
 	$(POETRY_RUN) black $(TEST_FILES) --check
 
 test:
-	$(POETRY_RUN) pytest tests
+	$(POETRY_RUN) pytest $(TESTS_FOLDER)
 
 test-verbose:
-	$(POETRY_RUN) pytest tests -vv
+	$(POETRY_RUN) pytest $(TESTS_FOLDER) -vv
 
 run:
 	$(POETRY_RUN) python -m $(SOURCES_FOLDER)
