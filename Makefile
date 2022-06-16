@@ -2,7 +2,7 @@ POETRY=poetry
 POETRY_RUN=$(POETRY) run
 
 SOURCE_FILES=$(shell find . -path "./get_metars/*.py")
-TEST_FILES=$(shell find . -path "./tests/**/*.py")
+TEST_FILES=$(shell find . -path "./tests/*.py")
 SOURCES_FOLDER=get_metars
 TESTS_FOLDER=tests
 

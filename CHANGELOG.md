@@ -1,3 +1,7 @@
+# 0.2.3
+
+- Fix Makefile variable
+
 # 0.2.2
 
 - Fix Makefile commands to lint and style the code
