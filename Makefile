@@ -28,11 +28,15 @@ major: check_no_main
 
 style:
 	$(POETRY_RUN) isort $(SOURCES_FOLDER)
+	$(POETRY_RUN) isort $(TESTS_FOLDER)
 	$(POETRY_RUN) black $(SOURCE_FILES)
+	$(POETRY_RUN) black $(TEST_FILES)
 
 lint:
 	$(POETRY_RUN) isort $(SOURCES_FOLDER) --check-only
+	$(POETRY_RUN) isort $(TESTS_FOLDER) --check-only
 	$(POETRY_RUN) black $(SOURCE_FILES) --check
+	$(POETRY_RUN) black $(TEST_FILES) --check
 
 test:
 	$(POETRY_RUN) pytest tests
