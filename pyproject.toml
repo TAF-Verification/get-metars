@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "get-metars"
-version = "0.2.3"
+version = "0.3.0"
 description = "Simple command line tool to download METAR's and TAF's for a given station and store them in text files."
 readme = "README.md"
 authors = ["diego-garro <diego.garromolina@yahoo.com>"]
