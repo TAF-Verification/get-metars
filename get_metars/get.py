@@ -1,7 +1,7 @@
 import asyncio
+import re
 from datetime import datetime
 from typing import Dict, List, Optional
-import re
 
 import aiohttp
 from bs4 import BeautifulSoup, ResultSet

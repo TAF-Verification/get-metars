@@ -1,3 +1,7 @@
+# 0.3.1
+
+- Fix lint styles.
+
 # 0.3.0
 
 - Now reports are written with the datetime prefix.
