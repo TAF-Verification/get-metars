@@ -64,6 +64,8 @@ where `SP` means `SPECI` type of aeronautical reports.
 
 To standarize the reports for TAF-VER verification program add the flag `--sanitize` or `-s`.
 To make the program store the reports in one line add the flag `--one-line` or `-o`.
+By default, reports are written to the file with the datetime prefix with format `%Y%m%d%H%M`. If you
+want to remove that prefix add the flag `--no-datetime-prefix`.
 
 So that's it. Simple no?
 Have a happy coding :D
