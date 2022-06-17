@@ -81,7 +81,13 @@ def main(
         False,
         "--sanitize",
         "-s",
+        is_flag=True,
         help="Sanitize the report to use in TAF verification program.",
+    ),
+    datetime_prefix: bool = typer.Option(
+        True,
+        is_flag=True,
+        help="Add the date and time as a prefix of the reports with format `%Y%m%d%H%M`",
     ),
 ) -> None:
     if init_date > datetime.today():
@@ -119,7 +125,10 @@ def main(
                     report = sanitize_metar(report, icao)
                 elif report_type in ["FC", "FT"]:
                     report = sanitize_taf(report, icao)
-            f.write(report + "\n")
+            if datetime_prefix:
+                f.write(report + "\n")
+            else:
+                f.write(re.sub(r"\d{12}\s", "", report) + "\n")
 
     report_filename = filename.replace(".txt", "")
     if len(reports) > 0:
