@@ -1,9 +1,10 @@
 import asyncio
 from datetime import datetime
 from typing import Dict, List, Optional
+import re
 
 import aiohttp
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, ResultSet
 from pydantic import validator
 from pydantic.dataclasses import dataclass
 from typing_extensions import Literal
@@ -84,13 +85,24 @@ def validate_dates(init: datetime, final: datetime):
 OGIMET_METAR_URL = "http://ogimet.com/display_metars2.php"
 
 
+def process_tr_tags(tr_tags: ResultSet) -> List[str]:
+    reports: List[str] = []
+    for tag in tr_tags:
+        td_tags = tag.findAll("td")
+        report = td_tags[2].find("pre").string
+        date = td_tags[1].string.replace("->", "")
+        _datetime = datetime.strptime(date, "%d/%m/%Y %H:%M")
+        reports.append(f"{_datetime.strftime('%Y%m%d%H%M')} {report}")
+    return reports
+
+
 async def get_data(payload: Dict[str, str]) -> List[str]:
     async with aiohttp.request("GET", OGIMET_METAR_URL, params=payload) as resp:
         data = await resp.text()
         soup = BeautifulSoup(data, "html5lib")
-        pre_tags = soup.findAll("pre")
+        tr_tags = soup.find_all(name="tr", attrs={"bgcolor": re.compile(r".+")})
 
-        return [tag.string for tag in pre_tags]
+        return process_tr_tags(tr_tags)
 
 
 async def get_reports(icao: str, type_: str, init: str, final: str) -> None:
