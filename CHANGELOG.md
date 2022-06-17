@@ -1,3 +1,8 @@
+# 0.3.0
+
+- Now reports are written with the datetime prefix.
+- Add a new flag to optionally remove the datetime prefix.
+
 # 0.2.3
 
 - Fix Makefile variable
