@@ -1,3 +1,8 @@
+# 0.4.0
+
+- Add function to sanitize reports when --type=ALL is selected.
+- Now get two files when --type=ALL is selected.
+
 # 0.3.1
 
 - Fix lint styles.
