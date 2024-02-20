@@ -180,3 +180,17 @@ def sanitize_taf(taf: str, icao_code: str):
     taf = _sanitize_change_group_code(taf)
 
     return taf
+
+
+def sanitize_all(report: str, icao_code: str):
+    is_taf = "TAF" in report
+    is_obs = "METAR" in report or "SPECI" in report
+    
+    if is_taf:
+        report = sanitize_taf(report, icao_code)
+    elif is_obs:
+        report = sanitize_metar(report, icao_code)
+    else:
+        pass
+    
+    return report

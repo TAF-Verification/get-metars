@@ -7,7 +7,7 @@ from typing import List
 import typer
 
 from .get import get_reports
-from .sanitize import sanitize_metar, sanitize_taf
+from .sanitize import sanitize_metar, sanitize_taf, sanitize_all
 
 app = typer.Typer()
 
@@ -125,6 +125,8 @@ def main(
                     report = sanitize_metar(report, icao)
                 elif report_type in ["FC", "FT"]:
                     report = sanitize_taf(report, icao)
+                else:
+                    report = sanitize_all(report, icao)
             if datetime_prefix:
                 f.write(report + "\n")
             else:
