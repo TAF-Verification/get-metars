@@ -97,7 +97,8 @@ def main(
     if report_type == "FT" or report_type == "FC":
         filename = "taf.txt"
     elif report_type == "ALL":
-        filename = "report.txt"
+        filename = "observations.txt"
+        taf_filename = "taf.txt"
     elif report_type == "SP":
         filename = "speci.txt"
     else:
@@ -118,25 +119,49 @@ def main(
         if one_line:
             reports = remove_white_spaces(reports)
 
-    with open(f"./{filename}", "w") as f:
-        for report in reports:
-            if sanitize:
-                if report_type in ["SA", "SP"]:
-                    report = sanitize_metar(report, icao)
-                elif report_type in ["FC", "FT"]:
-                    report = sanitize_taf(report, icao)
+    if report_type in ["SA", "SP", "FC", "FT"]:
+        with open(f"./{filename}", "w") as f:
+            for report in reports:
+                if sanitize:
+                    if report_type in ["SA", "SP"]:
+                        report = sanitize_metar(report, icao)
+                    elif report_type in ["FC", "FT"]:
+                        report = sanitize_taf(report, icao)
+                if datetime_prefix:
+                    f.write(report + "\n")
                 else:
-                    report = sanitize_all(report, icao)
+                    f.write(re.sub(r"\d{12}\s", "", report) + "\n")
+    else:
+        obs_file = open(f"./{filename}", "w")
+        taf_file = open(f"./{taf_filename}", "w")
+        for report in reports:
+            is_obs = "METAR" in report or "SPECI" in report
+            
+            if sanitize:
+                report = sanitize_all(report, icao, is_obs)
+                
+            text_to_write = ""
             if datetime_prefix:
-                f.write(report + "\n")
+                text_to_write = report + "\n"
             else:
-                f.write(re.sub(r"\d{12}\s", "", report) + "\n")
+                text_to_write = re.sub(r"\d{12}\s", "", report) + "\n"
+            
+            if is_obs:
+                obs_file.write(text_to_write)
+            else:
+                taf_file.write(text_to_write)
+        
+        obs_file.close()
+        taf_file.close()
 
-    report_filename = filename.replace(".txt", "")
+    if report_type == "ALL":
+        report_filename = "OBSERVATIONS and TAF"
+    else:
+        report_filename = filename.replace(".txt", "").upper()
     if len(reports) > 0:
-        typer.echo(f"{len(reports)} {report_filename.upper()} requested succesfully.")
+        typer.echo(f"{len(reports)} {report_filename} requested succesfully.")
     if len(reports) == 0:
-        typer.echo(f"No {report_filename.upper()} requested.")
+        typer.echo(f"No {report_filename} requested.")
 
 
 if __name__ == "__main__":
