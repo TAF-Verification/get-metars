@@ -23,18 +23,18 @@ jobs:
       
       - name: Install dependencies
         run: |
-          source $HOME/.poetry/env
+          poetry check --no-interaction
           poetry --version
           poetry install
       
       - name: Lint
         run: |
-          source $HOME/.poetry/env
+          poetry check --no-interaction
           make lint
       
       - name: Test
         run: |
-          source $HOME/.poetry/env
+          poetry check --no-interaction
           make tests
 
 
