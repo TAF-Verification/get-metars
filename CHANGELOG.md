@@ -1,3 +1,7 @@
+# 0.4.2
+
+- Fix CI/CD workflows command for getting poetry.
+
 # 0.4.1
 
 - Fix style.
