@@ -16,13 +16,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v1
         with:
-          python-version: 3.7
+          python-version: 3.8
 
       - name: Setup environment
         run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          source $HOME/.poetry/env
+          python -m pip install -U pip poetry
           poetry --version
+          poetry check --no-interaction
       
       - name: Install dependencies
         run: |

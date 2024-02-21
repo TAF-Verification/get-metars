@@ -1,3 +1,7 @@
+# 0.4.3
+
+- Fix poetry installation requirements.
+
 # 0.4.2
 
 - Fix CI/CD workflows command for getting poetry.
