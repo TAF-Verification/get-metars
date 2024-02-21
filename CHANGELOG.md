@@ -1,3 +1,7 @@
+# 0.4.1
+
+- Fix style.
+
 # 0.4.0
 
 - Add function to sanitize reports when --type=ALL is selected.

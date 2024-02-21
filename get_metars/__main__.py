@@ -7,7 +7,7 @@ from typing import List
 import typer
 
 from .get import get_reports
-from .sanitize import sanitize_metar, sanitize_taf, sanitize_all
+from .sanitize import sanitize_all, sanitize_metar, sanitize_taf
 
 app = typer.Typer()
 
@@ -136,21 +136,21 @@ def main(
         taf_file = open(f"./{taf_filename}", "w")
         for report in reports:
             is_obs = "METAR" in report or "SPECI" in report
-            
+
             if sanitize:
                 report = sanitize_all(report, icao, is_obs)
-                
+
             text_to_write = ""
             if datetime_prefix:
                 text_to_write = report + "\n"
             else:
                 text_to_write = re.sub(r"\d{12}\s", "", report) + "\n"
-            
+
             if is_obs:
                 obs_file.write(text_to_write)
             else:
                 taf_file.write(text_to_write)
-        
+
         obs_file.close()
         taf_file.close()
 

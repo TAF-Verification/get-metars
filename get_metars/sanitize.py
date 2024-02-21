@@ -1,9 +1,6 @@
 import re
 from datetime import datetime, timedelta
 
-# from metar import Metar
-import typer
-
 
 def _sanitize_type_metar(metar: str, icao_code: str):
     metar = re.sub(r"(METAR\s+)?SPECI(\s+METAR)?", "METAR", metar)
@@ -181,10 +178,11 @@ def sanitize_taf(taf: str, icao_code: str):
 
     return taf
 
-def sanitize_all(report: str, icao_code: str, is_obs: bool):    
+
+def sanitize_all(report: str, icao_code: str, is_obs: bool):
     if is_obs:
         report = sanitize_metar(report, icao_code)
     else:
         report = sanitize_taf(report, icao_code)
-    
+
     return report
