@@ -28,6 +28,10 @@ class ReportType(str, Enum):
     FC = "FC"
     ALL = "ALL"
 
+class Ord(str, Enum):
+    DIR = "DIR"
+    REV = "REV"
+
 
 @app.command()
 def main(
@@ -73,7 +77,7 @@ def main(
         "-o",
         is_flag=True,
         help=(
-            "Remove white spaces in the reports. "
+            "Removes white spaces in the reports. "
             "If True reports will be written in one line."
         ),
     ),
@@ -82,12 +86,20 @@ def main(
         "--sanitize",
         "-s",
         is_flag=True,
-        help="Sanitize the report to use in TAF verification program.",
+        help="Sanitizes the report to use in TAF verification program.",
+    ),
+    old_first: bool = typer.Option(
+        True,
+        is_flag=True,
+        help=(
+            "Writes the reports ordered by date older first. "
+            "If no, writes the reports newer first."
+        ),
     ),
     datetime_prefix: bool = typer.Option(
         True,
         is_flag=True,
-        help="Add the date and time as a prefix of the reports with format `%Y%m%d%H%M`",
+        help="Adds the date and time as a prefix of the reports with format `%Y%m%d%H%M`",
     ),
 ) -> None:
     if init_date > datetime.today():
@@ -107,11 +119,16 @@ def main(
     if final_date is None:
         final_date = init_date + timedelta(days=30, hours=23, minutes=59)
     typer.echo(f"Request from {init_date} to {final_date}.")
+    
+    if old_first:
+        ord_ = Ord.DIR
+    else:
+        ord_ = Ord.REV
 
     reports: List[str] = []
     try:
         reports = asyncio.run(
-            get_reports(icao.upper(), report_type, str(init_date), str(final_date))
+            get_reports(icao.upper(), str(init_date), str(final_date), ord_, report_type)
         )
     except Exception as e:
         typer.echo(f"{e}.".capitalize())

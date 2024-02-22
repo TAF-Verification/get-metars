@@ -105,14 +105,14 @@ async def get_data(payload: Dict[str, str]) -> List[str]:
         return process_tr_tags(tr_tags)
 
 
-async def get_reports(icao: str, type_: str, init: str, final: str) -> None:
+async def get_reports(icao: str, init: str, final: str, ord_: str, type_: str) -> None:
     # Init dates
     init_date = DateInitPayload(date=init)
     final_date = DateFinalPayload(date=final)
     # Validate dates
     validate_dates(init_date.date, final_date.date)
     # Init payload
-    payload_instance = Payload(icao=icao, type_=type_, ord_="DIR", nil="SI", fmt="html")
+    payload_instance = Payload(icao=icao, type_=type_, ord_=ord_, nil="SI", fmt="html")
     payload = payload_instance.to_dict
     # Update payload with valid dates
     payload.update(init_date.to_dict)
