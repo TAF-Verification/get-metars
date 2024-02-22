@@ -1,3 +1,7 @@
+# 0.5.0
+
+- Add new option --old-first to select if write the reports old first or not.
+
 # 0.4.4
 
 - Fix CI/CD poetry commands.
