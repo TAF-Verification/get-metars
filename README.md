@@ -7,7 +7,7 @@ store them in text files.
 
 This package requires:
 
-* [Python ^3.7][python-home]
+* [Python ^3.8][python-home]
 
 [python-home]: https://www.python.org
 
