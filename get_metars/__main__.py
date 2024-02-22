@@ -28,6 +28,7 @@ class ReportType(str, Enum):
     FC = "FC"
     ALL = "ALL"
 
+
 class Ord(str, Enum):
     DIR = "DIR"
     REV = "REV"
@@ -119,7 +120,7 @@ def main(
     if final_date is None:
         final_date = init_date + timedelta(days=30, hours=23, minutes=59)
     typer.echo(f"Request from {init_date} to {final_date}.")
-    
+
     if old_first:
         ord_ = Ord.DIR
     else:
@@ -128,7 +129,9 @@ def main(
     reports: List[str] = []
     try:
         reports = asyncio.run(
-            get_reports(icao.upper(), str(init_date), str(final_date), ord_, report_type)
+            get_reports(
+                icao.upper(), str(init_date), str(final_date), ord_, report_type
+            )
         )
     except Exception as e:
         typer.echo(f"{e}.".capitalize())
