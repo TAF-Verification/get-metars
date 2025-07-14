@@ -5,7 +5,7 @@ from typing import Dict, List, Optional
 
 import aiohttp
 from bs4 import BeautifulSoup, ResultSet
-from pydantic import validator
+from pydantic import field_validator
 from pydantic.dataclasses import dataclass
 from typing_extensions import Literal
 
@@ -16,7 +16,7 @@ today = datetime.today()
 class DateInitPayload:
     date: Optional[datetime]
 
-    @validator("date")
+    @field_validator("date")
     def parse_date(cls, v: str):
         if isinstance(v, str):
             try:
@@ -58,7 +58,7 @@ class Payload:
     nil: Literal["SI", "NO"]
     fmt: Literal["html", "txt"]
 
-    @validator("icao")
+    @field_validator("icao")
     def must_be_a_valid_icao_code(cls, v: str) -> str:
         assert len(v) == 4, "ICAO code must be 4 characters lenght"
         assert v.isalnum(), "invalid characters in ICAO code"
