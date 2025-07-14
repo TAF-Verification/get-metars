@@ -9,6 +9,10 @@
 ### Trash ###
 trash/
 
+### Other package managers files ###
+Pipfile
+Pipfile.lock
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
