@@ -6,6 +6,9 @@ readme = "README.md"
 authors = ["diego-garro <diego.garromolina@yahoo.com>"]
 license = "MIT"
 repository = "https://github.com/diego-garro/tafver-metars"
+packages = [
+    { include = "src" },
+]
 
 [tool.poetry.scripts]
 get-metars = 'get_metars.__main__:app'
