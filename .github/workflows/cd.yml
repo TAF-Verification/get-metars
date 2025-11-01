@@ -22,30 +22,30 @@ jobs:
         run: |
           python -m pip install -U pip poetry
           poetry --version
-          poetry check --no-interaction
+          poetry check --no-interaction --no-root
       
       - name: Install dependencies
         run: |
-          poetry check --no-interaction
+          poetry check --no-interaction --no-root
           poetry --version
           poetry install
       
       - name: Lint
         run: |
-          poetry check --no-interaction
+          poetry check --no-interaction --no-root
           make lint
       
       - name: Test
         run: |
-          poetry check --no-interaction
+          poetry check --no-interaction --no-root
           make tests
       
       - name: Build package
         run: |
-          poetry check --no-interaction
+          poetry check --no-interaction --no-root
           poetry build
       
       - name: Publish to PyPI
         run: |
-          poetry check --no-interaction
+          poetry check --no-interaction --no-root
           poetry publish -u __token__ -p ${{ secrets.PYPIPASS }}

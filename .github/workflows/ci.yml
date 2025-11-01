@@ -23,18 +23,18 @@ jobs:
       
       - name: Install dependencies
         run: |
-          poetry check --no-interaction
+          poetry check --no-interaction --no-root
           poetry --version
           poetry install
       
       - name: Lint
         run: |
-          poetry check --no-interaction
+          poetry check --no-interaction --no-root
           make lint
       
       - name: Test
         run: |
-          poetry check --no-interaction
+          poetry check --no-interaction --no-root
           make tests
 
 
