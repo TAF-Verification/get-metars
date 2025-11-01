@@ -1,9 +1,7 @@
 POETRY=poetry
 POETRY_RUN=$(POETRY) run
 
-SOURCE_FILES=$(shell find . -path "./get_metars/*.py")
-TEST_FILES=$(shell find . -path "./tests/*.py")
-SOURCES_FOLDER=get_metars
+SOURCES_FOLDER=src
 TESTS_FOLDER=tests
 
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
@@ -30,14 +28,14 @@ major: check_no_main
 style:
 	$(POETRY_RUN) isort $(SOURCES_FOLDER)
 	$(POETRY_RUN) isort $(TESTS_FOLDER)
-	$(POETRY_RUN) black $(SOURCE_FILES)
-	$(POETRY_RUN) black $(TEST_FILES)
+	$(POETRY_RUN) black $(SOURCES_FOLDER)
+	$(POETRY_RUN) black $(TESTS_FOLDER)
 
 lint:
 	$(POETRY_RUN) isort $(SOURCES_FOLDER) --check-only
 	$(POETRY_RUN) isort $(TESTS_FOLDER) --check-only
-	$(POETRY_RUN) black $(SOURCE_FILES) --check
-	$(POETRY_RUN) black $(TEST_FILES) --check
+	$(POETRY_RUN) black $(SOURCES_FOLDER) --check
+	$(POETRY_RUN) black $(TESTS_FOLDER) --check
 
 test:
 	$(POETRY_RUN) pytest $(TESTS_FOLDER)

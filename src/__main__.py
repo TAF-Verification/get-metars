@@ -2,10 +2,11 @@ import asyncio
 import re
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import List
+from typing import Annotated, List, Optional
 
 import typer
 
+from . import __version__
 from .get import get_reports
 from .sanitize import sanitize_all, sanitize_metar, sanitize_taf
 
@@ -19,6 +20,12 @@ def remove_white_spaces(reports: List[str]):
         report = report.strip()
         sanitized_reports.append(report)
     return sanitized_reports
+
+
+def version_callback(value: bool):
+    if value:
+        print(f"get-metars v{__version__}")
+        raise typer.Exit()
 
 
 class ReportType(str, Enum):
@@ -40,68 +47,93 @@ def main(
         default="MROC",
         help="The ICAO code of the station to request, e.g. MROC for Int. Airp. Juan Santamaría",
     ),
-    report_type: ReportType = typer.Option(
-        ReportType.SA,
-        "--type",
-        "-t",
-        help="""Type of report to request.
+    version: Annotated[
+        Optional[bool],
+        typer.Option(
+            "--version",
+            "-v",
+            callback=version_callback,
+            is_eager=True,
+        ),
+    ] = None,
+    report_type: Annotated[
+        ReportType,
+        typer.Option(
+            "--type",
+            "-t",
+            help="""Type of report to request.
         SA -> METAR,
         SP -> SPECI,
         FT -> TAF (long),
         FC -> TAF (short),
         ALL -> All types""",
-    ),
-    init_date: datetime = typer.Option(
-        "2006-01-01T00:00:00",
-        "--init",
-        "-i",
-        help="The initial UTC date and time to request the reports.",
-    ),
-    final_date: datetime = typer.Option(
-        None,
-        "--final",
-        "-f",
-        help=(
-            "The final UTC date and time to request the reports. "
-            "Defaults to `init` + 30 days, 23 hours and 59 minutes."
         ),
-    ),
-    filename: str = typer.Option(
-        "metar.txt",
-        "--file",
-        "-F",
-        help="The filename to write the reports on disk. Default will be changed",
-    ),
-    one_line: bool = typer.Option(
-        False,
-        "--one-line",
-        "-o",
-        is_flag=True,
-        help=(
-            "Removes white spaces in the reports. "
-            "If True reports will be written in one line."
+    ] = ReportType.SA,
+    init_date: Annotated[
+        datetime,
+        typer.Option(
+            "--init",
+            "-i",
+            help="The initial UTC date and time to request the reports.",
         ),
-    ),
-    sanitize: bool = typer.Option(
-        False,
-        "--sanitize",
-        "-s",
-        is_flag=True,
-        help="Sanitizes the report to use in TAF verification program.",
-    ),
-    old_first: bool = typer.Option(
-        True,
-        is_flag=True,
-        help=(
-            "Writes the reports ordered by date older first. "
-            "If no, writes the reports newer first."
+    ] = "2006-01-01T00:00:00",
+    final_date: Annotated[
+        datetime,
+        typer.Option(
+            "--final",
+            "-f",
+            help=(
+                "The final UTC date and time to request the reports. "
+                "Defaults to `init` + 30 days, 23 hours and 59 minutes."
+            ),
         ),
-    ),
-    datetime_prefix: bool = typer.Option(
-        True,
-        is_flag=True,
-        help="Adds the date and time as a prefix of the reports with format `%Y%m%d%H%M`",
-    ),
+    ] = None,
+    filename: Annotated[
+        str,
+        typer.Option(
+            "--file",
+            "-F",
+            help="The filename to write the reports on disk. Default will be changed",
+        ),
+    ] = "metar.txt",
+    one_line: Annotated[
+        bool,
+        typer.Option(
+            "--one-line",
+            "-o",
+            is_flag=True,
+            help=(
+                "Removes white spaces in the reports. "
+                "If True reports will be written in one line."
+            ),
+        ),
+    ] = False,
+    sanitize: Annotated[
+        bool,
+        typer.Option(
+            "--sanitize",
+            "-s",
+            is_flag=True,
+            help="Sanitizes the report to use in TAF verification program.",
+        ),
+    ] = False,
+    old_first: Annotated[
+        bool,
+        typer.Option(
+            is_flag=True,
+            help=(
+                "Writes the reports ordered by date older first. "
+                "If no, writes the reports newer first."
+            ),
+        ),
+    ] = True,
+    datetime_prefix: Annotated[
+        bool,
+        typer.Option(
+            is_flag=True,
+            help="Adds the date and time as a prefix of the reports with format `%Y%m%d%H%M`",
+        ),
+    ] = True,
 ) -> None:
     if init_date > datetime.today():
         typer.echo(f"Initial date and time must be older than current date and time.")

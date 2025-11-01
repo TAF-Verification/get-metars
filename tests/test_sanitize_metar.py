@@ -1,4 +1,4 @@
-from get_metars.sanitize import sanitize_metar
+from src.sanitize import sanitize_metar
 
 
 def test_sanitize_metar():

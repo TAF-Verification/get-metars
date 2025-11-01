@@ -1,7 +1,7 @@
 import asyncio
 import re
 from datetime import datetime
-from typing import Dict, List, Optional, Literal
+from typing import Dict, List, Literal, Optional
 
 import aiohttp
 from bs4 import BeautifulSoup, ResultSet
@@ -44,7 +44,7 @@ class DateFinalPayload(DateInitPayload):
             "mesf": f"{self.date.month:02d}",
             "dayf": f"{self.date.day:02d}",
             "horaf": f"{self.date.hour:02d}",
-            "minf": f"{self.date.minute:02d}",
+            "minf": "59",
         }
 
 
@@ -79,7 +79,7 @@ def validate_dates(init: datetime, final: datetime):
     assert delta.days <= 31, "only requests of 31 days are valid"
 
 
-OGIMET_METAR_URL = "http://ogimet.com/display_metars2.php"
+OGIMET_METAR_URL = "https://ogimet.com/display_metars2.php"
 
 
 def process_tr_tags(tr_tags: ResultSet) -> List[str]:

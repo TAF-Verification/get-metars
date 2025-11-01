@@ -1,6 +1,6 @@
 from os import remove
 
-from get_metars.__main__ import remove_white_spaces
+from src.__main__ import remove_white_spaces
 
 
 def test_version():
