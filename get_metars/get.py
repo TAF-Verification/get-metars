@@ -1,13 +1,12 @@
 import asyncio
 import re
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Literal
 
 import aiohttp
 from bs4 import BeautifulSoup, ResultSet
 from pydantic import field_validator
 from pydantic.dataclasses import dataclass
-from typing_extensions import Literal
 
 today = datetime.today()
 
@@ -28,7 +27,6 @@ class DateInitPayload:
 
         return v
 
-    @property
     def to_dict(self) -> Dict[str, str]:
         return {
             "ano": f"{self.date.year}",
@@ -39,7 +37,7 @@ class DateInitPayload:
 
 
 class DateFinalPayload(DateInitPayload):
-    @property
+
     def to_dict(self) -> Dict[str, str]:
         return {
             "anof": f"{self.date.year}",
@@ -64,7 +62,6 @@ class Payload:
         assert v.isalnum(), "invalid characters in ICAO code"
         return v
 
-    @property
     def to_dict(self) -> Dict[str, str]:
         return {
             "lugar": self.icao,
@@ -113,10 +110,10 @@ async def get_reports(icao: str, init: str, final: str, ord_: str, type_: str) -
     validate_dates(init_date.date, final_date.date)
     # Init payload
     payload_instance = Payload(icao=icao, type_=type_, ord_=ord_, nil="SI", fmt="html")
-    payload = payload_instance.to_dict
+    payload = payload_instance.to_dict()
     # Update payload with valid dates
-    payload.update(init_date.to_dict)
-    payload.update(final_date.to_dict)
+    payload.update(init_date.to_dict())
+    payload.update(final_date.to_dict())
     # Getting the data
     reports = await get_data(payload)
     # Return the reports as a List[str]
